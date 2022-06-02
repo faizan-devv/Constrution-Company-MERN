@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import MetaData from "../layout/MetaData";
+import axios from "axios";
 
 const Labor = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,46 @@ const Labor = () => {
     laborArea: "",
     image: "",
   });
+
+  const registerLabour = async (e)=>{
+    e.preventDefault();
+    console.log('I have been triggered');
+    const formDataObj = new FormData();
+    formDataObj.append("name", formData.name);
+    formDataObj.append("contactNumber", formData.contactNumber);
+    formDataObj.append("cinc", formData.cinc);
+    formDataObj.append("dob", formData.dob);
+    formDataObj.append("laborArea", formData.laborArea);
+    formDataObj.append("type", formData.type);
+    formDataObj.append("workDescription", formData.workDescription);
+    for(let i =0; i < formData.image.length; i++) {
+            formDataObj.append("files", formData.image[i]);
+    }
+    const config = {
+      headers: {
+          'Content-Type': "multipart/form-data",
+          'withCredentials': 'true'
+      }
+  }
+    console.log("about to trigger api call",formDataObj);
+    // await fetch("http://localhost:4000/api/v1/admin/labor/new", {
+    //     method: 'POST',
+    //     body: formDataObj,
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //       "Cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODM2ZDczNjkyNTMwOTViN2FkMmU0YiIsImlhdCI6MTY1NDE1MTg2NCwiZXhwIjoxNjU0NzU2NjY0fQ.NHl4j5q57oFfO2eLzdm3cV1HSYWRhz204eKW9d51smg"
+    //     }
+    // })
+    //     .then((res) => console.log(res))
+    //     .catch((err) => ("Error occured", err));
+    axios.post("http://localhost:4000/api/v1/admin/labor/new", formDataObj, config).then((response) => {
+      console.log("response::", response)
+  })
+  .catch((error) => {
+      console.log(error);
+  })
+
+  }
   return (
     <Fragment>
       <MetaData title={"labor"} />
@@ -129,6 +170,9 @@ const Labor = () => {
                         className="custom-file-input"
                         id="customFile"
                         multiple
+                        onChange={(e) => {
+                          setFormData({ ...formData, image: e.target.files });
+                        }}
                       />
                       <label className="custom-file-label" for="customFile">
                         Choose Images
@@ -140,6 +184,7 @@ const Labor = () => {
                     id="login_button"
                     type="submit"
                     class="btn btn-block py-2"
+                    onClick={(e)=>{registerLabour(e)}}
                   >
                     Register
                   </button>

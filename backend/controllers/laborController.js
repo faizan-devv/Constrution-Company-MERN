@@ -4,9 +4,12 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const APIFeatures = require("../utils/apiFeatures");
 const cloudinary = require("cloudinary");
+const { Mongoose } = require("mongoose");
 
 // Create new labor   =>   /api/v1/admin/labor/new
 exports.newLabor = catchAsyncErrors(async (req, res, next) => {
+  console.log("file", req.file);
+  console.log('body', req.body);
   //   let images = [];
   //   if (typeof req.body.images === "string") {
   //     images.push(req.body.images);
@@ -31,10 +34,10 @@ exports.newLabor = catchAsyncErrors(async (req, res, next) => {
   //   req.body.user = req.user.id;
 
   const labor = await Labor.create(req.body);
-
+  console.log('labour::', labor);
   res.status(201).json({
     success: true,
-    labor,
+    labor
   });
 });
 

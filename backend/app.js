@@ -10,6 +10,7 @@ const errorMiddleware = require("./middlewares/errors");
 app.use(express.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 app.use(fileUpload());
 
 //import all routes
