@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const {
   getLabors,
@@ -21,7 +23,12 @@ router.route("/labor/:id").get(getSingleLabor);
 
 router
   .route("/admin/labor/new")
-  .post(isAuthenticatedUser, authorizeRoles("admin"), newLabor);
+  .post(
+    isAuthenticatedUser,
+    authorizeRoles("admin"),
+    upload.array("images", 5),
+    newLabor
+  );
 
 router
   .route("/admin/labor/:id")

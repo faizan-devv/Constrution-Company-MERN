@@ -7,6 +7,8 @@ const cloudinary = require("cloudinary");
 
 // Create new labor   =>   /api/v1/admin/labor/new
 exports.newLabor = catchAsyncErrors(async (req, res, next) => {
+  console.log("I came here in function..");
+  console.log("files..:", req.file);
   //   let images = [];
   //   if (typeof req.body.images === "string") {
   //     images.push(req.body.images);
@@ -32,7 +34,7 @@ exports.newLabor = catchAsyncErrors(async (req, res, next) => {
 
   const labor = await Labor.create(req.body);
 
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     labor,
   });
