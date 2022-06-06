@@ -10,6 +10,7 @@ const errorMiddleware = require("./middlewares/errors");
 app.use(express.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 app.use(fileUpload());
 
 //import all routes
@@ -19,6 +20,7 @@ const auth = require("./routes/auth");
 const order = require("./routes/order");
 const video = require("./routes/video");
 const labour = require("./routes/labor");
+const payment = require("./routes/payment");
 
 app.use("/api/v1", products);
 app.use("/api/v1", packages);
@@ -26,6 +28,7 @@ app.use("/api/v1", auth);
 app.use("/api/v1", order);
 app.use("/api/v1", video);
 app.use("/api/v1", labour);
+app.use("/api/v1", payment);
 
 if (process.env.NODE_ENV === "PRODUCTION") {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
