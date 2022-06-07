@@ -1,6 +1,8 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import axios from "axios";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const CARD_OPTIONS = {
   iconStyle: "solid",
@@ -23,12 +25,15 @@ const CARD_OPTIONS = {
 };
 
 export default function PaymentForm() {
+  const history = useHistory();
   const [success, setSuccess] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
+  const { cartItems } = useSelector(state => state.cart)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let totalInCents = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2) * 100;
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: elements.getElement(CardElement),
@@ -40,14 +45,14 @@ export default function PaymentForm() {
         const response = await axios.post(
           "http://localhost:3000/api/v1/payment",
           {
-            amount: 1000,
+            amount: totalInCents,
             id,
           }
         );
 
         if (response.data.success) {
           console.log("Successful payment");
-          setSuccess(true);
+          history.push('/ordersuccess');
         }
       } catch (error) {
         console.log("Error", error);
@@ -59,7 +64,6 @@ export default function PaymentForm() {
 
   return (
     <>
-      {!success ? (
         <form onSubmit={handleSubmit}>
           <fieldset className="FormGroup">
             <div className="FormRow">
@@ -68,14 +72,6 @@ export default function PaymentForm() {
           </fieldset>
           <button>Pay</button>
         </form>
-      ) : (
-        <div>
-          <h2>
-            You just bought a sweet spatula congrats this is the best decision
-            of you're life
-          </h2>
-        </div>
-      )}
     </>
   );
 }

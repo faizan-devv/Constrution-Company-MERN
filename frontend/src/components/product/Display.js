@@ -46,7 +46,7 @@ const Display = ({ match }) => {
             return alert.error(error)
         }
 
-        dispatch(getProducts(keyword, currentPage, price, category, rating));
+        dispatch(getProducts());
 
 
     }, [dispatch, alert, error, keyword, currentPage, price, category, rating])
