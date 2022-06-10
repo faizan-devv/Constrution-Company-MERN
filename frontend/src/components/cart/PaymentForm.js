@@ -29,11 +29,14 @@ export default function PaymentForm() {
   const [success, setSuccess] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-  const { cartItems } = useSelector(state => state.cart)
+  const { cartItems } = useSelector((state) => state.cart);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let totalInCents = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2) * 100;
+    let totalInCents =
+      cartItems
+        .reduce((acc, item) => acc + item.quantity * item.price, 0)
+        .toFixed(2) * 100;
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: elements.getElement(CardElement),
@@ -52,7 +55,7 @@ export default function PaymentForm() {
 
         if (response.data.success) {
           console.log("Successful payment");
-          history.push('/ordersuccess');
+          history.push("/ordersuccess");
         }
       } catch (error) {
         console.log("Error", error);
@@ -64,14 +67,14 @@ export default function PaymentForm() {
 
   return (
     <>
-        <form onSubmit={handleSubmit}>
-          <fieldset className="FormGroup">
-            <div className="FormRow">
-              <CardElement options={CARD_OPTIONS} />
-            </div>
-          </fieldset>
-          <button>Pay</button>
-        </form>
+      <form onSubmit={handleSubmit}>
+        <fieldset className="FormGroup">
+          <div className="FormRow">
+            <CardElement options={CARD_OPTIONS} />
+          </div>
+        </fieldset>
+        <button>Pay</button>
+      </form>
     </>
   );
 }

@@ -1,9 +1,10 @@
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
+const dotenv = require("dotenv");
+dotenv.config({ path: "backend/config/config.env" });
 const StripeKey = process.env.STRIPE_SECRET_KEY;
-const stripe = require("stripe")(
-  "sk_test_51L7gwdIY1aWHioOI5sfJ9PhFqdf54mPtkZGN8Gof0hqs7wEmgRiJa9zY0O7RfOtY8a6k5N0YI6GYiucsxPtMZmxI00uyIDbvLE"
-);
+const stripe = require("stripe")(StripeKey);
+
 
 // Create Payment   =>   /api/v1/payment
 exports.payment = catchAsyncErrors(async (req, res, next) => {
