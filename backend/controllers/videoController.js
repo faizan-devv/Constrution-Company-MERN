@@ -39,39 +39,37 @@ const cloudinary = require('cloudinary')
 //         projectVideo
 //     })
 // })
-
 exports.newVideo = catchAsyncErrors(async (req, res, next) => {
 
-  let clips = []
-  if (typeof req.body.clips === 'string') {
-      clips.push(req.body.clips)
-  } else {
-      clips = req.body.clips
-  }
-
-  let clipsLinks = [];
-
-  for (let i = 0; i < clips.length; i++) {
-      const result = await cloudinary.v2.uploader.upload(clips[i], {
-          folder: 'videos'
-      });
-
-      clipsLinks.push({
-          public_id: result.public_id,
-          url: result.secure_url
-      })
-  }
-
-  req.body.clips = clipsLinks
-  req.body.user = req.user.id;
-
-  const video = await Video.create(req.body);
-
-  res.status(201).json({
-      success: true,
-      video
+    let clips = req.body.clip;
+    let clipsLinks = [];
+  
+        const result = await cloudinary.v2.uploader.upload(clips, { resource_type: "video", 
+      public_id: "videos",
+      folder : "videos",
+      chunk_size: 6000000,
+      eager: [
+        { width: 300, height: 300, crop: "pad", audio_codec: "none" }, 
+        { width: 160, height: 100, crop: "crop", gravity: "south", audio_codec: "none" } ],                                   
+      eager_async: true,
+      eager_notification_url: "" },);
+  
+        clipsLinks.push({
+            public_id: result.public_id,
+            url: result.secure_url
+        })
+    
+  
+    req.body.clips = clipsLinks
+    req.body.user = req.user.id;
+  
+    const video = await Video.create(req.body);
+  
+    res.status(201).json({
+        success: true,
+        video
+    })
   })
-})
 
 
 

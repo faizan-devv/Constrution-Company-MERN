@@ -16,8 +16,7 @@ const UploadVideo = ({history}) => {
   // const [category, setCategory] = useState('');
   // const [stock, setStock] = useState(0);
  
-  const [clips, setClips] = useState([]);
-  const [clipsPreview, setClipsPreview] = useState([])
+  const [clips, setClips] = useState();
 
 
 
@@ -70,34 +69,19 @@ const UploadVideo = ({history}) => {
       formData.set('numOfDays', numOfDays);
       formData.set('projStartDate', projStartDate);
       formData.set('description', description);
-      // formData.set('category', category);
-      // formData.set('stock', stock);
-      clips.forEach(clip => {
-          formData.append('clips', clip)
-      })
+      formData.set('clip', clips);
       dispatch(newVideo(formData))
 
   }
 
   const onChange = e => {
 
-      const files = Array.from(e.target.files)
-
-      setClipsPreview([]);
-      setClips([])
-
-      files.forEach(file => {
+      const files = e.target.files[0];
           const reader = new FileReader();
-
           reader.onload = () => {
-              if (reader.readyState === 2) {
-                  setClipsPreview(oldArray => [...oldArray, reader.result])
-                  setClips(oldArray => [...oldArray, reader.result])
-              }
+            setClips(reader.result)
           }
-
-          reader.readAsDataURL(file)
-      })
+          reader.readAsDataURL(files)
   }
   return (
     <Fragment>
@@ -174,12 +158,6 @@ const UploadVideo = ({history}) => {
                             Choose Video
                         </label>
                     </div>
-                    {clipsPreview.map(clip => (
-                                        
-                                    <video width="55" height="52" controls>
-                                    <source src={clip} key={clip} type="video/mp4" /> 
-                                    </video>
-                                    ))}
 
             </div>
 

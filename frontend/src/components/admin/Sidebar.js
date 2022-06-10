@@ -67,7 +67,7 @@ const Sidebar = () => {
                         <i className="fa fa-play"></i>Videos</a>
                         <ul className="collapse list-unstyled" id="videoSubmenu">
                         <li>
-                                <Link to="/admin/vedios"><i className="fa fa-clipboard"></i> All</Link>
+                                <Link to="/admin/vedeos"><i className="fa fa-clipboard"></i> All</Link>
                             </li>
                             <li>
                                 <Link to="/admin/uploadvideo"><i className="fa fa-plus"></i> Create</Link>
