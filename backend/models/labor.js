@@ -8,13 +8,12 @@ const labourSchema = new mongoose.Schema({
     maxLength: [100, "Product name cannot exceed 100 characters"],
   },
   dob: {
-    type: Date,
+    type: String,
     required: [true, "Please enter Date of Birth price"],
   },
   cnic: {
     type: Number,
     required: [true, "Please enter CNIC price"],
-    maxLength: [13, "Product name cannot exceed 5 characters"],
   },
   description: {
     type: String,
@@ -30,7 +29,7 @@ const labourSchema = new mongoose.Schema({
   },
   contactNumber: {
     type: Number,
-    maxLength: [13, "Product name cannot exceed 5 characters"],
+    maxLength: [25, "Product name cannot exceed 5 characters"],
     default: 0,
   },
   labourArea: {

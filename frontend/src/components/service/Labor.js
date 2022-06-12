@@ -31,14 +31,13 @@ const Labor = () => {
   const registerLabour = async (e) => {
     e.preventDefault();
     let obj ={
-      'id':uuidv4(),
       'name': formData.name,
-    'contactNumber': formData.contactNumber,
-    'cinc': formData.cinc,
-    'dob': formData.dob,
-    'laborArea': formData.laborArea,
+      'dob': formData.dob,
+      'cnic': formData.cinc,
+    'description': formData.workDescription,
     'type': formData.type,
-    'workDescription': formData.workDescription,
+    'contactNumber': formData.contactNumber,
+    'laborArea': formData.laborArea,
     'file': formData.images,
     }
 
