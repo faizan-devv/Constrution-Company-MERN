@@ -4,7 +4,6 @@ import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux'
 import {newLabor} from '../../actions/laborActions'
 import {LABOR_REGISTOR_REQUEST} from '../../constants/laborConstants'
-import { v4 as uuidv4 } from 'uuid';
 
 const Labor = () => {
   const dispatch = useDispatch();

@@ -8,29 +8,21 @@ const cloudinary = require('cloudinary')
 
 // Create new vehicle   =>   /api/v1/admin/vehicle/new
 exports.newVehicle = catchAsyncErrors(async (req, res, next) => {
-
-    let images = []
-    if (typeof req.body.images === 'string') {
-        images.push(req.body.images)
-    } else {
-        images = req.body.images
-    }
-
+    let images = req.body.file;
     let imagesLinks = [];
-
-    for (let i = 0; i < images.length; i++) {
-        const result = await cloudinary.v2.uploader.upload(images[i], {
-            folder: 'vehicles'
-        });
-
-        imagesLinks.push({
+  
+        const result = await cloudinary.v2.uploader.upload(images, 
+        { folder: "Vehicle", 
+          public_id: new Date().toISOString() + req.body.name });
+  
+          imagesLinks.push({
             public_id: result.public_id,
             url: result.secure_url
         })
-    }
-
+    
+  
     req.body.images = imagesLinks
-    req.body.user = req.user.id;
+    
 
     const vehicle = await Vehicle.create(req.body);
 

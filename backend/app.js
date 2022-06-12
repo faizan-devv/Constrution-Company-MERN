@@ -21,6 +21,7 @@ const auth = require("./routes/auth");
 const order = require("./routes/order");
 const video = require("./routes/video");
 const labour = require("./routes/labor");
+const vehicle = require("./routes/vehicle")
 const payment = require("./routes/payment");
 
 app.use("/api/v1", products);
@@ -29,6 +30,7 @@ app.use("/api/v1", auth);
 app.use("/api/v1", order);
 app.use("/api/v1", video);
 app.use("/api/v1", labour);
+app.use("/api/v1", vehicle);
 app.use("/api/v1", payment);
 
 if (process.env.NODE_ENV === "PRODUCTION") {

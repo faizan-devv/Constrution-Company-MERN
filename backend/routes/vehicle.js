@@ -22,7 +22,7 @@ router.route('/vehicles').get(getVehicles);
 router.route('/admin/vehicles').get(getAdminVehicles);
 router.route('/vehicle/:id').get(getSingleVehicle);
 
-router.route('/admin/vehicle/new').post(isAuthenticatedUser, authorizeRoles('admin'), newVehicle);
+router.route('/vehicle/new').post(newVehicle);
 
 router.route('/admin/vehicle/:id')
     .put(isAuthenticatedUser, authorizeRoles('admin'), updateVehicle)
