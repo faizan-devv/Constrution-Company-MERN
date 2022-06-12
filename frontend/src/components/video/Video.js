@@ -2,14 +2,14 @@
  import React from 'react'
  import { Link } from 'react-router-dom'
  
- const Video = ({ video, col }) => {
+ const Video = () => {
      
      return (
-         <div className={`col-sm-12 col-md-6 col-lg-${col} my-3`}>
+         <div className={`col-sm-12 col-md-6 col-lg-3 my-3`}>
              <div className="card p-3 rounded">
                 
     
-                       <video 
+                       {/* <video 
                      controls>
                                     <source src={video.clips[0].url} key={clip} type="video/mp4" /> 
                                     </video> 
@@ -26,7 +26,7 @@
                      </div>
                      <p className="card-text">{video.numOfDays}</p>
                      <Link to={`/video/${video._id}`} id="view_btn" className="btn btn-block">View Details</Link>
-                 </div>
+                 </div> */}
              </div>
          </div>
      )

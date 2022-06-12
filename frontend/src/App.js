@@ -125,7 +125,7 @@ function App() {
           <Route path="/laborshow" component={LaborShow}  />
           <Route path="/vehicleshow" component={VehicleShow}  />
           <Route path="/complain" component={Complain}  />
-          {/* <Route path="/video" component={Video}  /> */}
+          <Route path="/video" component={Video}  />
           <Route path="/vehicle" component={Vehicle}  />
           <Route path="/calculator" component={Calculator}  exact />
           <Route path="/constructioncost" component={ConstructionCost}  exact />

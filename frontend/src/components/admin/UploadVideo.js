@@ -64,13 +64,20 @@ const UploadVideo = ({history}) => {
   const submitHandler = (e) => {
       e.preventDefault();
 
-      const formData = new FormData();
-      formData.set('name', name);
-      formData.set('numOfDays', numOfDays);
-      formData.set('projStartDate', projStartDate);
-      formData.set('description', description);
-      formData.set('clip', clips);
-      dispatch(newVideo(formData))
+      let obj ={
+        'name': name,
+      'numOfDays': numOfDays,
+      'projStartDate': projStartDate,
+      'description': description,
+      'clip': clips,
+      }
+      // const formData = new FormData();
+      // formData.set('name', name);
+      // formData.set('numOfDays', numOfDays);
+      // formData.set('projStartDate', projStartDate);
+      // formData.set('description', description);
+      // formData.set('clip', clips);
+      dispatch(newVideo(obj))
 
   }
 

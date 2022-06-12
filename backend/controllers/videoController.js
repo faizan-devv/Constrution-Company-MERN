@@ -45,7 +45,7 @@ exports.newVideo = catchAsyncErrors(async (req, res, next) => {
     let clipsLinks = [];
   
         const result = await cloudinary.v2.uploader.upload(clips, { resource_type: "video", 
-      public_id: "videos",
+      public_id: new Date().toISOString(),
       folder : "videos",
       chunk_size: 6000000,
       eager: [

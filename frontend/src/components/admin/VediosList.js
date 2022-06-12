@@ -71,9 +71,15 @@ const VediosList = ({history}) => {
             rows: []
         }
 
+        console.log("videos",videos);
         videos.forEach(video => {
             data.rows.push({
-                id: video._id,
+                id:<Fragment>
+                    <video width="240" height="240" controls>
+                       <source src={video.clips[0].url} type="video/mp4" />
+                    </video>
+
+                </Fragment>,
                 name: video.name,
                 numOfDays: `$${video.numOfDays}`,
                 projStartDate: video.projStartDate,
