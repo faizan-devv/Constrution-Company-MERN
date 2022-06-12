@@ -7,9 +7,28 @@ const { Mongoose } = require("mongoose");
 
 // Create new labor   =>   /api/v1/labor/new
 exports.newLabor = catchAsyncErrors(async (req, res, next) => {
-  console.log("I have been triggered");
-  console.log("file", req.file);
-  console.log("body", req.body);
+  let images = req.body.file;
+  let imagesLinks = [];
+
+      const result = await cloudinary.v2.uploader.upload(images, 
+      { folder: "Labors", 
+        public_id: new Date().toISOString() + req.body.name });
+
+        imagesLinks.push({
+          public_id: result.public_id,
+          url: result.secure_url
+      })
+  
+
+  req.body.images = imagesLinks
+  
+
+  // const labor = await Labor.create(req.body);
+
+  // res.status(201).json({
+  //     success: true,
+  //     labor
+  // })
   //   let images = [];
   //   if (typeof req.body.images === "string") {
   //     images.push(req.body.images);
@@ -34,7 +53,6 @@ exports.newLabor = catchAsyncErrors(async (req, res, next) => {
   //   req.body.user = req.user.id;
 
   const labor = await Labor.create(req.body);
-  console.log("labour::", labor);
   res.status(201).json({
     success: true,
     labor,

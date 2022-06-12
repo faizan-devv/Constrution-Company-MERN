@@ -1,8 +1,13 @@
 import React, { Fragment, useState, useEffect } from "react";
 import MetaData from "../layout/MetaData";
 import axios from "axios";
+import { useDispatch, useSelector } from 'react-redux'
+import {newLabor} from '../../actions/laborActions'
+import {LABOR_REGISTOR_REQUEST} from '../../constants/laborConstants'
+import { v4 as uuidv4 } from 'uuid';
 
 const Labor = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
     dob: "",
@@ -11,29 +16,56 @@ const Labor = () => {
     type: "",
     contactNumber: "",
     laborArea: "",
-    image: "",
+    images: "",
   });
 
+  const getBaseImg =(e)=>{
+    const files = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData({ ...formData, images: reader.result });
+    }
+    reader.readAsDataURL(files)
+
+  }
   const registerLabour = async (e) => {
     e.preventDefault();
-    console.log("I have been triggered");
-    const formDataObj = new FormData();
-    formDataObj.append("name", formData.name);
-    formDataObj.append("contactNumber", formData.contactNumber);
-    formDataObj.append("cinc", formData.cinc);
-    formDataObj.append("dob", formData.dob);
-    formDataObj.append("laborArea", formData.laborArea);
-    formDataObj.append("type", formData.type);
-    formDataObj.append("workDescription", formData.workDescription);
-    for (let i = 0; i < formData.image.length; i++) {
-      formDataObj.append("files", formData.image[i]);
+    let obj ={
+      'id':uuidv4(),
+      'name': formData.name,
+    'contactNumber': formData.contactNumber,
+    'cinc': formData.cinc,
+    'dob': formData.dob,
+    'laborArea': formData.laborArea,
+    'type': formData.type,
+    'workDescription': formData.workDescription,
+    'file': formData.images,
     }
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data; boundary=XXX",
-      },
-    };
-    console.log("about to trigger api call", formDataObj);
+
+    console.log("image",obj);
+    dispatch(newLabor(obj))
+
+
+
+
+    // console.log("I have been triggered");
+    // const formDataObj = new FormData();
+    // formDataObj.append("name", formData.name);
+    // formDataObj.append("contactNumber", formData.contactNumber);
+    // formDataObj.append("cinc", formData.cinc);
+    // formDataObj.append("dob", formData.dob);
+    // formDataObj.append("laborArea", formData.laborArea);
+    // formDataObj.append("type", formData.type);
+    // formDataObj.append("workDescription", formData.workDescription);
+    // for (let i = 0; i < formData.image.length; i++) {
+    //   formDataObj.append("files", formData.image[i]);
+    // // }
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data; boundary=XXX",
+    //   },
+    // };
+    // console.log("about to trigger api call", formDataObj);
     // await fetch("http://localhost:4000/api/v1/admin/labor/new", {
     //     method: 'POST',
     //     body: formDataObj,
@@ -44,14 +76,14 @@ const Labor = () => {
     // })
     //     .then((res) => console.log(res))
     //     .catch((err) => ("Error occured", err));
-    axios
-      .post("http://localhost:4000/api/v1/labor/new", formDataObj, config)
-      .then((response) => {
-        console.log("response::", response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // axios
+    //   .post("http://localhost:4000/api/v1/labor/new", formDataObj, config)
+    //   .then((response) => {
+    //     console.log("response::", response);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
   return (
     <Fragment>
@@ -171,7 +203,7 @@ const Labor = () => {
                         id="customFile"
                         multiple
                         onChange={(e) => {
-                          setFormData({ ...formData, image: e.target.files });
+                          getBaseImg(e);
                         }}
                       />
                       <label className="custom-file-label" for="customFile">

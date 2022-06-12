@@ -1,9 +1,11 @@
 
- import React from 'react'
+import React, {  useEffect } from 'react'
+import { getAdminVideos } from '../../actions/videoActions'
+import { useDispatch, useSelector } from 'react-redux'
  import { Link } from 'react-router-dom'
  
  const Video = () => {
-     
+    const dispatch = useDispatch();
      return (
          <div className={`col-sm-12 col-md-6 col-lg-3 my-3`}>
              <div className="card p-3 rounded">

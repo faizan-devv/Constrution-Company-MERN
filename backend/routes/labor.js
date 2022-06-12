@@ -21,7 +21,7 @@ router.route("/labors").get(getLabors);
 router.route("/admin/labors").get(getAdminLabors);
 router.route("/labor/:id").get(getSingleLabor);
 
-router.route("/labor/new").post(upload.array("images", 5), newLabor);
+router.route("/labor/new").post(newLabor);
 
 router
   .route("/admin/labor/:id")
