@@ -46,6 +46,10 @@ const labourSchema = new mongoose.Schema({
       },
     },
   ],
+  isApproved: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model("Labour", labourSchema);

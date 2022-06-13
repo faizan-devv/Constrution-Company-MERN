@@ -3,7 +3,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const APIFeatures = require("../utils/apiFeatures");
 const cloudinary = require("cloudinary");
-const { Mongoose } = require("mongoose");
+
 
 // Create new labor   =>   /api/v1/labor/new
 exports.newLabor = catchAsyncErrors(async (req, res, next) => {
@@ -61,23 +61,10 @@ exports.newLabor = catchAsyncErrors(async (req, res, next) => {
 
 //Get all labors => /api/v1/labors
 exports.getLabors = catchAsyncErrors(async (req, res, next) => {
-  const resPerPage = 4;
-  const laborsCount = await Labor.countDocuments();
-  console.log("query param before sending", req.params.query);
-  const apiFeatures = new APIFeatures(Labor.find(), req.params.query)
-    .search()
-    .filter();
-  let labors = await apiFeatures.query;
-  let filteredLaborsCount = labors.length;
-
-  apiFeatures.pagination(resPerPage);
-  labors = await apiFeatures.query.clone();
+  const labors = await Labor.find({isApproved: true});
 
   res.status(200).json({
     success: true,
-    laborsCount,
-    resPerPage,
-    filteredLaborsCount,
     labors,
   });
 });
@@ -85,6 +72,15 @@ exports.getLabors = catchAsyncErrors(async (req, res, next) => {
 // Get all labors (Admin)  =>   /api/v1/admin/labors
 exports.getAdminLabors = catchAsyncErrors(async (req, res, next) => {
   const labors = await Labor.find();
+
+  res.status(200).json({
+    success: true,
+    labors,
+  });
+});
+
+exports.getApprovedLabors = catchAsyncErrors(async (req, res, next) => {
+  const labors = await Labor.find({isApproved: true});
 
   res.status(200).json({
     success: true,
@@ -114,36 +110,36 @@ exports.updateLabor = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("labor not found", 404));
   }
 
-  let images = [];
-  if (typeof req.body.images === "string") {
-    images.push(req.body.images);
-  } else {
-    images = req.body.images;
-  }
+  // let images = [];
+  // if (typeof req.body.images === "string") {
+  //   images.push(req.body.images);
+  // } else {
+  //   images = req.body.images;
+  // }
 
-  if (images !== undefined) {
-    // Deleting images associated with the labor
-    for (let i = 0; i < labor.images.length; i++) {
-      const result = await cloudinary.v2.uploader.destroy(
-        labor.images[i].public_id
-      );
-    }
+  // if (images !== undefined) {
+  //   // Deleting images associated with the labor
+  //   for (let i = 0; i < labor.images.length; i++) {
+  //     const result = await cloudinary.v2.uploader.destroy(
+  //       labor.images[i].public_id
+  //     );
+  //   }
 
-    let imagesLinks = [];
+  //   let imagesLinks = [];
 
-    for (let i = 0; i < images.length; i++) {
-      const result = await cloudinary.v2.uploader.upload(images[i], {
-        folder: "labors",
-      });
+  //   for (let i = 0; i < images.length; i++) {
+  //     const result = await cloudinary.v2.uploader.upload(images[i], {
+  //       folder: "labors",
+  //     });
 
-      imagesLinks.push({
-        public_id: result.public_id,
-        url: result.secure_url,
-      });
-    }
+  //     imagesLinks.push({
+  //       public_id: result.public_id,
+  //       url: result.secure_url,
+  //     });
+  //   }
 
-    req.body.images = imagesLinks;
-  }
+  //   req.body.images = imagesLinks;
+  // }
 
   labor = await Labor.findByIdAndUpdate(req.params.id, req.body, {
     new: true,

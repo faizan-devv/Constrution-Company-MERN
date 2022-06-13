@@ -1,10 +1,26 @@
-import React, {Fragment} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import MetaData from '../layout/MetaData'
 import Sidebar from './Sidebar'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+
+
+
 
 const LaborsList = () => {
+	const [labourData, setLabourData] = useState([]);
     
+	useEffect(()=>{
+		axios
+		  .get("http://localhost:4000/api/v1/admin/labors")
+		  .then((response) => {
+			if(response.data.success)
+			setLabourData(response.data.labors)
+		  })
+		  .catch((error) => {
+			console.log(error);
+		  });
+	}, [])
 
   return (
     <Fragment>
@@ -32,40 +48,22 @@ const LaborsList = () => {
      	</tr>
      </thead>
      <tbody>
-     	  <tr>
-     	  	  <td data-label="S.No">1</td>
-     	  	  <td data-label="Name">Noorullah</td>
-     	  	  <td data-label="Age">61101-5141068-1</td>
-     	  	  <td data-label="Marks%">Plumber</td>
-             <td data-label="Staus"> <Link to="/admin/updatelabor"><i className="fa fa-pencil"></i> </Link>  <i className="fa fa-trash"></i> </td>
-     	  </tr>
-
-     	  <tr>
-     	  	  <td data-label="S.No">2</td>
-     	  	  <td data-label="Name">Kamal</td>
-     	  	  <td data-label="Age">61101-5141058-2</td>
-     	  	  <td data-label="Marks%">civil engineer</td>
-     	  	  <td data-label="Staus"> <Link to="/admin/updatelabor"><i className="fa fa-pencil"></i> </Link>  <i className="fa fa-trash"></i></td>
-     	  </tr>
-
-     	  <tr>
-     	  	  <td data-label="S.No">3</td>
-     	  	  <td data-label="Name">Ali</td>
-     	  	  <td data-label="Age">61101-3121048-5</td>
-     	  	  <td data-label="Marks%">Electration</td>
-     	  	  <td data-label="Staus"> <Link to="/admin/updatelabor"><i className="fa fa-pencil"></i> </Link>  <i className="fa fa-trash"></i></td>
-     	  </tr>
-
-     	  <tr>
-     	  	  <td data-label="S.No">4</td>
-     	  	  <td data-label="Name">Majid</td>
-     	  	  <td data-label="Age">61101-5141068-3</td>
-     	  	  <td data-label="Marks%">Painter</td>
-     	  	  <td data-label="Staus"> <Link to="/admin/updatelabor"><i className="fa fa-pencil"></i> </Link> <i className="fa fa-trash"></i></td>
-     	  </tr>
+     	 {
+			labourData?.map((labor)=>{
+				return (
+					<tr key={labor._id}>
+					<td data-label="S.No">{labor._id}</td>
+					<td data-label="Name">{labor.name}</td>
+					<td data-label="Age">{labor.cnic}</td>
+					<td data-label="Marks%">{labor.type}</td>
+				<td data-label="Staus"> <Link to={`/admin/updatelabor/${labor._id}`}><i className="fa fa-pencil"></i> </Link>  <i className="fa fa-trash"></i> </td>
+			  </tr>
+				)
+			})
+		 }
      </tbody>
    </table>
-  </table><div className="dataTables_info" id="example_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div>
+  </table><div className="dataTables_info" id="example_info" role="status" aria-live="polite">Showing {labourData.length} to  {labourData.length} of  {labourData.length} entries</div>
   </div>
 
             </Fragment>

@@ -25,7 +25,7 @@ router.route("/labor/new").post(newLabor);
 
 router
   .route("/admin/labor/:id")
-  .put(isAuthenticatedUser, authorizeRoles("admin"), updateLabor)
+  .patch(updateLabor)
   .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteLabor);
 
 router.route("/review").put(isAuthenticatedUser, createLaborReview);

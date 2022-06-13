@@ -57,6 +57,10 @@ const vehicleSchema = new mongoose.Schema({
       },
     },
   ],
+  isApproved: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model("Vehicle", vehicleSchema);
