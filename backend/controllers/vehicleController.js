@@ -35,25 +35,12 @@ exports.newVehicle = catchAsyncErrors(async (req, res, next) => {
 
 //Get all vehicles => /api/v1/vehicles
 exports.getVehicles = catchAsyncErrors (async (req,res, next) =>{
-    const resPerPage=4;
-    const vehiclesCount = await Vehicle.countDocuments();
-  
-    const apiFeatures = new APIFeatures(Vehicle.find(), req.query)
-    .search()
-    .filter()
-    let vehicles = await apiFeatures.query;
-    let filteredVehiclesCount = vehicles.length;
-  
-      apiFeatures.pagination(resPerPage)
-      vehicles = await apiFeatures.query.clone();
-     
-      res.status(200).json({
-        success: true,
-        vehiclesCount,
-        resPerPage,
-        filteredVehiclesCount,
-        vehicles
-      })
+    const vehiles = await Vehicle.find({isApproved: true});
+
+  res.status(200).json({
+    success: true,
+    vehiles,
+  });
     
   })
   
@@ -95,36 +82,36 @@ exports.updateVehicle = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Vehicle not found', 404));
     }
 
-    let images = []
-    if (typeof req.body.images === 'string') {
-        images.push(req.body.images)
-    } else {
-        images = req.body.images
-    }
+    // let images = []
+    // if (typeof req.body.images === 'string') {
+    //     images.push(req.body.images)
+    // } else {
+    //     images = req.body.images
+    // }
 
-    if (images !== undefined) {
+    // if (images !== undefined) {
 
-        // Deleting images associated with the vehicle
-        for (let i = 0; i < vehicle.images.length; i++) {
-            const result = await cloudinary.v2.uploader.destroy(vehicle.images[i].public_id)
-        }
+    //     // Deleting images associated with the vehicle
+    //     for (let i = 0; i < vehicle.images.length; i++) {
+    //         const result = await cloudinary.v2.uploader.destroy(vehicle.images[i].public_id)
+    //     }
 
-        let imagesLinks = [];
+    //     let imagesLinks = [];
 
-        for (let i = 0; i < images.length; i++) {
-            const result = await cloudinary.v2.uploader.upload(images[i], {
-                folder: 'vehicles'
-            });
+    //     for (let i = 0; i < images.length; i++) {
+    //         const result = await cloudinary.v2.uploader.upload(images[i], {
+    //             folder: 'vehicles'
+    //         });
 
-            imagesLinks.push({
-                public_id: result.public_id,
-                url: result.secure_url
-            })
-        }
+    //         imagesLinks.push({
+    //             public_id: result.public_id,
+    //             url: result.secure_url
+    //         })
+    //     }
 
-        req.body.images = imagesLinks
+    //     req.body.images = imagesLinks
 
-    }
+    // }
 
 
 
