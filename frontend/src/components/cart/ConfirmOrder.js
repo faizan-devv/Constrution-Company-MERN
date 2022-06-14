@@ -1,21 +1,32 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-
+import axios from 'axios'
 import MetaData from '../layout/MetaData'
 import CheckoutSteps from './CheckoutSteps'
-
-import { useSelector } from 'react-redux'
+import  {updateCartTotal} from '../../actions/cartActions'
+import { useSelector, useDispatch } from 'react-redux'
 
 const ConfirmOrder = ({ history }) => {
+    const dispatch = useDispatch();
 
     const { cartItems, shippingInfo } = useSelector(state => state.cart)
     const { user } = useSelector(state => state.auth)
+     // Calculate Order Prices
+     const itemsPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+     const shippingPrice = itemsPrice > 200 ? 0 : 25
+     const taxPrice = Number((0.05 * itemsPrice).toFixed(2))
+     const totalPrice = (itemsPrice + shippingPrice + taxPrice).toFixed(2)
 
-    // Calculate Order Prices
-    const itemsPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
-    const shippingPrice = itemsPrice > 200 ? 0 : 25
-    const taxPrice = Number((0.05 * itemsPrice).toFixed(2))
-    const totalPrice = (itemsPrice + shippingPrice + taxPrice).toFixed(2)
+    const [couponCode, setCouponCode] = useState("");
+    const [discount, setDiscount] = useState(0);
+    const [msg, setMsg] = useState("");
+    
+    const [total, setTotal] = useState((itemsPrice + shippingPrice + taxPrice).toFixed(2));
+
+   
+   useEffect(()=>{
+        dispatch(updateCartTotal(total))
+   },[total]);
 
     const processToPayment = () => {
         const data = {
@@ -28,7 +39,27 @@ const ConfirmOrder = ({ history }) => {
         sessionStorage.setItem('orderInfo', JSON.stringify(data))
         history.push('/payment')
     }
-
+    const applyCoupon = (e)=>{
+        e.preventDefault();
+            axios
+              .post(`http://localhost:4000/api/v1/verifyCoupon`, {name: couponCode})
+              .then((response) => {
+                if(response.data.success)
+                {   
+                   
+                    setMsg(`Coupon Applied Successfully with ${response.data.discount}% discount !`)
+                    setDiscount(response.data.discount)
+                    setTotal(total - (total*(response.data.discount/100)))
+                }
+                else
+                {   
+                    setMsg(response.data.errMessage)
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+    }
     return (
         <Fragment>
 
@@ -82,10 +113,15 @@ const ConfirmOrder = ({ history }) => {
                         <p>Subtotal:  <span className="order-summary-values">${itemsPrice}</span></p>
                         <p>Shipping: <span className="order-summary-values">${shippingPrice}</span></p>
                         <p>Tax:  <span className="order-summary-values">${taxPrice}</span></p>
-
+                        {
+                            discount? <p>Coupon Discount:  <span className="order-summary-values">-${totalPrice*(discount/100)}</span></p>: null
+                        }
+                        <input placeholder='Enter Coupon Code' value={couponCode} onChange={(e)=>{setCouponCode(e.target.value)}}/>
+                        <button id="checkout_btn" className="btn btn-primary btn-block" onClick={(e)=>{applyCoupon(e)}}>Apply Coupon</button>
+                        <p><span >{msg}</span></p>
                         <hr />
 
-                        <p>Total: <span className="order-summary-values">${totalPrice}</span></p>
+                        <p style={{ marginTop: "10px"}}>Total: <span className="order-summary-values">${total}</span></p>
 
                         <hr />
                         <button id="checkout_btn" className="btn btn-primary btn-block" onClick={processToPayment}>Proceed to Payment</button>

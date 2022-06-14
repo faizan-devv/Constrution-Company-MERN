@@ -7,9 +7,11 @@ const {
   getSingleCoupon,
   updateCoupon,
   deleteCoupon,
+  verifyCoupon
 } = require("../controllers/couponController");
 
 router.route("/coupons").get(getCoupons);
+router.route("/verifyCoupon").post(verifyCoupon);
 router.route("/Coupon/:id").get(getSingleCoupon);
 
 router.route("/admin/coupon/new").post(newCoupon);

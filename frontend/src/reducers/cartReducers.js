@@ -1,6 +1,6 @@
-import { ADD_TO_CART, REMOVE_ITEM_CART, SAVE_SHIPPING_INFO } from '../constants/cartConstants'
+import { ADD_TO_CART, REMOVE_ITEM_CART, SAVE_SHIPPING_INFO, CART_TOTAL } from '../constants/cartConstants'
 
-export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
+export const cartReducer = (state = { cartItems: [], shippingInfo: {}, total: 0 }, action) => {
     switch (action.type) {
 
         case ADD_TO_CART:
@@ -32,7 +32,13 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
                 ...state,
                 shippingInfo: action.payload
             }
-
+        case CART_TOTAL:
+            {   console.log("In reducer about set state", action.payload)
+                return {
+                    ...state,
+                    total: action.payload
+                }
+            }
 
         default:
             return state

@@ -39,6 +39,34 @@ exports.getSingleCoupon = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// Get verify coupon details   =>   /api/v1//verifyCoupon
+exports.verifyCoupon = catchAsyncErrors(async (req, res, next) => {
+
+  const coupon = await Coupon.find({name: req.body.name});
+  if (coupon.length === 0) {
+    return next(new ErrorHandler("Coupon not found", 203));
+  }
+  const todaysDate = new Date();
+  const expiryDate = new Date(coupon[0].expiry);
+  let isValid = expiryDate>= todaysDate;
+  if(isValid)
+  {
+    res.status(200).json({
+      success: true,
+      discount: coupon[0].discount,
+    });
+  }
+  else
+  {
+    res.status(203).json({
+      success: false,
+      errMessage: "Regretably, The coupon has expired !",
+    });
+  }
+});
+
+
+
 // Update Coupon   =>   /api/v1/admin/coupon/:id
 exports.updateCoupon = catchAsyncErrors(async (req, res, next) => {
   let coupon = await Coupon.findById(req.params.id);

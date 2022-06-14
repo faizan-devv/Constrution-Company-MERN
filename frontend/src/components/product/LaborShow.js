@@ -30,7 +30,7 @@ const LaborShow = () => {
       return (
         <div className="col-lg-4 col-md-6 col-sm-6" key={labour._id}>
     <div className="service-block mb-5">
-      <img src={labour.images[0].url} alt className="img-fluid" />
+      <img src={labour.images[0].url}  className="img-fluid" />
       <div className="card-body d-flex flex-column">
       <h5 className="card-title">
         <Link to="">{labour.type}</Link>
